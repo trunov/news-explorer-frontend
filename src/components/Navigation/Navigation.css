@@ -1,0 +1,30 @@
+.navigation {
+  display: flex;
+  align-items: center;
+}
+
+.navigation__paragraph {
+  font-family: "Roboto";
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #fff;
+  margin: 0 32px 0 0;
+  padding: 30px 0 26px 0;
+  border-bottom: 3px solid #fff;
+}
+
+.navigation__button {
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid #ffffff;
+  box-sizing: border-box;
+  border-radius: 100px;
+  cursor: pointer;
+  font-family: "Roboto";
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  margin: 0;
+  padding: 12px 12px 15px;
+}
