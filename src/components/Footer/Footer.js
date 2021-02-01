@@ -9,12 +9,14 @@ function Footer() {
         &#169; 2020 SWEN. Powered by News Api
       </div>
       <div className="footer__links">
-        <a className="footer__link" href="#">
-          Главная
-        </a>
-        <a className="footer__link" href="https://praktikum.yandex.ru">
-          Яндекс.Практикум
-        </a>
+        <div className="footer__links__wrap">
+          <a className="footer__link" href="#">
+            Главная
+          </a>
+          <a className="footer__link" href="https://praktikum.yandex.ru">
+            Яндекс.Практикум
+          </a>
+        </div>
 
         <a href="https://github.com/trunov" className="footer__logo">
           <img src={github} alt="github"></img>

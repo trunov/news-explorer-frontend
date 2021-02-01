@@ -25,7 +25,6 @@
   font-weight: normal;
   font-size: 18px;
   line-height: 24px;
-  text-align: center;
   color: #1a1b22;
   text-decoration: none;
   margin-right: 42px;
@@ -37,4 +36,42 @@
 
 .footer__logo:last-of-type {
   margin-right: 0px;
+}
+
+
+
+@media screen and (max-width: 920px) {
+  .footer {
+    flex-direction: column-reverse;
+    padding: 20px 16px 30px 16px;
+  }
+}
+
+@media screen and (max-width: 920px) {
+  .footer__copyright {
+    flex-basis: 0;
+    margin-left: -14px;
+  }
+}
+
+@media screen and (max-width: 920px) {
+  .footer__links {
+    align-items: unset;
+  }
+}
+
+@media screen and (max-width: 920px) {
+  .footer__link:first-of-type {
+    margin-bottom: 30px;
+  }
+}
+
+
+
+@media screen and (max-width: 920px) {
+  .footer__links__wrap {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+  }
 }
