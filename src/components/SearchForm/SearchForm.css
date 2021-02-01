@@ -1,5 +1,5 @@
 .searchForm {
-  width: 608px;
+  max-width: 608px;
   margin: 0;
   padding-bottom: 80px;
   display: flex;
@@ -50,4 +50,32 @@
   position: absolute;
   top: 0;
   right: 0;
+}
+
+
+@media screen and (max-width: 830px) {
+  .searchForm  {
+    max-width: 404px;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 0 16px 32px 16px;
+  }
+}
+
+@media screen and (max-width: 830px) {
+  .searchForm__input {
+    margin-bottom: 16px;
+    padding-right: 0px;
+    height: 56px;
+    width: unset;
+  }
+}
+
+@media screen and (max-width: 830px) {
+  .searchForm__button {
+    position: unset;
+    height: 56px;
+    padding: 0;
+    width: unset;
+  }
 }

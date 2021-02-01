@@ -3,7 +3,6 @@
 }
 
 .App_wrap {
-  min-width: 320px;
   max-height: 576px;
   background-image: url('../../images/background.png');
   background-repeat: no-repeat;

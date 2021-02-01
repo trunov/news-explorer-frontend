@@ -3,7 +3,7 @@
   align-items: center;
 }
 
-.navigation__paragraph {
+.navigation__main {
   font-family: "Roboto";
   font-weight: 500;
   font-size: 16px;
@@ -27,4 +27,31 @@
   line-height: 24px;
   margin: 0;
   padding: 12px 12px 15px;
+}
+
+.navigation__burger {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: none;
+}
+
+
+@media screen and (max-width: 830px) {
+  .navigation__main {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 830px) {
+  .navigation__button {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 830px) {
+  .navigation__burger {
+    display: block;
+    margin: 16px 0 16px 0;
+  }
 }
