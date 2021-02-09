@@ -3,7 +3,7 @@ import aboutPhoto from "../../images/me.jpg";
 
 function About() {
   return (
-    <div className="about">
+    <section className="about">
       <img src={aboutPhoto} alt="about__photo" className="about__photo"></img>
       <div className="about__info">
         <h3 className="about__info__author">Об авторе</h3>
@@ -12,7 +12,7 @@ function About() {
           работают: NodeJS/ReactJS.
         </p>
       </div>
-    </div>
+    </section>
   );
 }
 

@@ -2,15 +2,17 @@ import React from "react";
 
 import "./SearchForm.css";
 
-function SearchForm() {
+function SearchForm({setPreloaderOpen}) {
   const [newsInput, setNewsInput] = React.useState("");
 
   function handleNewsInput(evt) {
     setNewsInput(evt.target.value);
   }
 
-  function resetForm() {
-    setNewsInput("");
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    setPreloaderOpen();
+    setNewsInput('');
   }
 
   return (
@@ -25,7 +27,7 @@ function SearchForm() {
         placeholder="Введите тему новости"
         value={newsInput}
       ></input>
-      <button type="submit" class="searchForm__button">
+      <button onClick={handleSubmit} type="submit" className="searchForm__button">
         Искать
       </button>
     </form>
