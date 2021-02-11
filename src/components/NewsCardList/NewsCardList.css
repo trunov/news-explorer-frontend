@@ -63,7 +63,31 @@
   outline: none;
 }
 
+
+
 @media screen and (max-width: 1023px) {
+  .news__container {
+    padding: 40px;
+  }
+  .news__title {
+    font-size: 30px;
+    margin-bottom: 32px;
+  }
+
+  .news__list {
+    grid-template-columns: repeat(auto-fit, 224px);
+    grid-gap: 8px;
+  }
+
+  .news__show-btn {
+    width: 240px;
+    height: 56px;
+    margin-top: 22px;
+  }
+}
+
+
+@media screen and (max-width: 767px) {
   .news__container {
     padding: 32px 16px;
   }

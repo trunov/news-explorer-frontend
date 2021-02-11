@@ -54,7 +54,15 @@
 }
 
 
-@media screen and (max-width: 830px) {
+@media screen and (max-width: 1023px) {
+  .searchForm  {
+    max-width: 448px;
+    padding-bottom: 48px;
+  }
+}
+
+
+@media screen and (max-width: 767px) {
   .searchForm  {
     max-width: 404px;
     flex-direction: column;
@@ -63,7 +71,7 @@
   }
 }
 
-@media screen and (max-width: 830px) {
+@media screen and (max-width: 767px) {
   .searchForm__input {
     margin-bottom: 16px;
     padding-right: 0px;
@@ -72,7 +80,7 @@
   }
 }
 
-@media screen and (max-width: 830px) {
+@media screen and (max-width: 767px) {
   .searchForm__button {
     position: unset;
     height: 56px;

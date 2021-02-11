@@ -8,14 +8,14 @@ import logoutSavedNews from "../../images/logout.svg";
 import logoutMain from "../../images/logout_main.svg";
 
 function Navigation({
-  handleButtonClick,
+  handleBurgerButtonClick,
   handleLogOut,
-  handleAuthorizeClick,
+  handleAuthorizeButtonClick,
   isPressed,
   loggedIn,
   location,
+  isButtonAuthrorizePressed,
 }) {
-
   return (
     <nav className="navigation">
       <div
@@ -58,7 +58,7 @@ function Navigation({
         )}
 
         <button
-          onClick={loggedIn ? handleLogOut : handleAuthorizeClick}
+          onClick={loggedIn ? handleLogOut : handleAuthorizeButtonClick}
           className={`navigation__wrap__button ${
             loggedIn && "navigation__wrap__button-loggedIn"
           } ${
@@ -68,8 +68,8 @@ function Navigation({
         >
           {loggedIn ? "Кирилл" : "Авторизоваться"}
 
-          {loggedIn && (
-            location.pathname === "/saved-news" ? (
+          {loggedIn &&
+            (location.pathname === "/saved-news" ? (
               <img
                 className="navigation__wrap__button-img"
                 alt="logout"
@@ -81,12 +81,16 @@ function Navigation({
                 alt="logout"
                 src={logoutMain}
               ></img>
-            )
-          )}
+            ))}
         </button>
       </div>
 
-      <button onClick={handleButtonClick} className="navigation__burger">
+      <button
+        onClick={handleBurgerButtonClick}
+        className={`navigation__burger ${
+          isButtonAuthrorizePressed && "navigation__burger_visibility"
+        }`}
+      >
         {location.pathname === "/saved-news" ? (
           <img
             alt="burger menu"
@@ -96,6 +100,7 @@ function Navigation({
           <img alt="burger menu" src={isPressed ? close : burger}></img>
         )}
       </button>
+
       <div
         style={{
           display: isPressed && "block",
