@@ -1,0 +1,33 @@
+.notFound {
+  min-height: 374px;
+  background-color: #f5f6f7;
+}
+
+.notFound__wrap {
+  padding: 86px 0 80px;
+}
+
+.notFound__wrap__img {
+  display: block;
+  margin: 0px auto 40px;
+}
+
+.notFound__wrap__header {
+  font-family: 'Roboto-Slab', sans-serif;
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 30px;
+  text-align: center;
+  color: #1a1b22;
+  margin: 0 0 16px;
+}
+
+.notFound__wrap__paragraph {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  text-align: center;
+  color: #b6bcbf;
+  margin: 0;
+}

@@ -1,0 +1,236 @@
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #00000080;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 0 50px;
+  display: flex;
+  z-index: 2;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s ease, opacity 0.3s ease-in-out;
+}
+
+.popup_opened {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0.3s ease, opacity 0.3s linear;
+}
+
+.popup__container {
+  width: 430px;
+  background-color: #fff;
+  box-sizing: border-box;
+  padding: 34px 36px 28px;
+  position: relative;
+  border-radius: 16px;
+  box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.popup__close-button {
+  background-image: url("../../images/back.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  padding: 0;
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.popup__close-button:hover {
+  opacity: 0.6;
+}
+
+.popup__close-button:focus {
+  outline: none;
+  opacity: 0.6;
+}
+
+.popup__title {
+  color: #000;
+  margin: 0 0 22px 0;
+  padding: 0;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.popup__input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  cursor: text;
+  width: 100%;
+  border: none;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 0 0 10px 0;
+  margin: 0 0 31px 0;
+  font-size: 14px;
+  line-height: 17px;
+  color: #000;
+  caret-color: #2f71e5;
+}
+
+.popup__input:first-of-type {
+  margin: 0 0 13px 0;
+}
+
+.popup__input:last-of-type {
+  margin: 0 0 24px 0;
+}
+
+.popup__label {
+  margin: 0 0 9px 0;
+  padding: 0;
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.2;
+  color: #2f71e5;
+}
+
+.popup__input::placeholder {
+  color: #00000080;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.popup__input:focus {
+  outline: none;
+  border-bottom: 1px solid #000000;
+}
+
+/* .popup__input:first-of-type {
+  margin-top: 36px;
+} */
+
+.popup__button {
+  width: 100%;
+  height: 50px;
+  padding: 0;
+  border: none;
+  background: #2f71e5;
+  box-shadow: 0px 5px 15px rgba(14, 26, 57, 0.2);
+  border-radius: 100px;
+  color: #fff;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  text-align: center;
+  transition: background-color 0.2s ease-in-out;
+  margin: 0 0 16px 0;
+}
+
+.popup__button_disabled {
+  background-color: #e6e8eb;
+  color: #b6bcbf;
+  box-shadow: none;
+  border: none;
+  border-radius: 100px;
+  pointer-events: none;
+}
+
+.popup__button:hover {
+  background-color: #347eff;
+}
+
+.popup__button:focus {
+  outline: none;
+  background-color: #2a65cc;
+}
+
+.popup__email-error {
+  font-family: "Inter";
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: center;
+  color: #ff0000;
+  position: relative;
+  top: -8px;
+  visibility: hidden;
+}
+
+.popup__error {
+  font-family: "Inter";
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: center;
+  color: #ff0000;
+  position: relative;
+  top: -8px;
+  left: 25%;
+  visibility: hidden;
+}
+
+.popup__error_shown {
+  visibility: visible;
+}
+
+.popup__paragraph-link {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #000000;
+  margin: 0;
+}
+
+.popup__link {
+  color: #2f71e5;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 767px) {
+  .popup__container {
+    padding: 30px;
+  }
+}
+
+@media screen and (max-width: 424px) {
+  .popup {
+    align-items: unset;
+    top: 62px;
+    padding: 0;
+  }
+
+  .popup__title {
+    font-size: 16px;
+  }
+
+  .popup__container {
+    padding: 16px 24px 700px 24px;
+  }
+
+  .popup__close-button {
+    top: -45px;
+    right: 22px;
+    width: 24px;
+    height: 24px;
+  }
+}

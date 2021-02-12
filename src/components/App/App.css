@@ -1,0 +1,11 @@
+.App {
+  margin: 0;
+}
+
+.App_wrap {
+  max-height: 576px;
+  background-image: url('../../images/background.png');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+}
