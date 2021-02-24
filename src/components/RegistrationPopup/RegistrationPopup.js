@@ -1,15 +1,16 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import PopupWithForm from "../PopupWithForm/PopupWithForm";
 
-function RegistrationPopup({ isOpen, onClose, changePopup }) {
+function RegistrationPopup({ isOpen, onClose, changePopup, handleRegister }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [name, setName] = React.useState("");
 
+  const [fillSpan, setFillSpan] = React.useState(false);
   const [inputsFilled, setInputsFilled] = React.useState(false);
 
   function checkInputs() {
-    if(email !== "" && password !== "" && name !== "") {
+    if (email !== "" && password !== "" && name !== "") {
       setInputsFilled(true);
     } else {
       setInputsFilled(false);
@@ -40,6 +41,7 @@ function RegistrationPopup({ isOpen, onClose, changePopup }) {
 
   function handleSubmit(e) {
     e.preventDefault();
+    handleRegister(name, email, password, setFillSpan);
     resetForm();
   }
 
@@ -92,9 +94,11 @@ function RegistrationPopup({ isOpen, onClose, changePopup }) {
         name="name"
         className="popup__input"
       />
-      <span id="password-error" className="popup__error popup__error_shown">
-        Такой пользователь уже есть
-      </span>
+      {fillSpan && (
+        <span id="password-error" className="popup__error popup__error_shown">
+          Такой пользователь уже есть
+        </span>
+      )}
     </PopupWithForm>
   );
 }

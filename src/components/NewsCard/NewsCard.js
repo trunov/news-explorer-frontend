@@ -3,7 +3,6 @@ import React from "react";
 import "./NewsCard.css";
 
 function NewsCard({
-  id,
   name,
   title,
   description,
@@ -24,7 +23,7 @@ function NewsCard({
     <li className="news-card">
       <button
         className={`news-card__marker ${
-          isSaved && location.pathname === "/"
+          isSaved && location.pathname === "/" && loggedIn
             ? "news-card__marker_saved"
             : "news-card__marker_unsaved"
         }`}

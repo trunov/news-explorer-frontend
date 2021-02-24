@@ -2,7 +2,7 @@ import React from "react";
 
 import "./SearchForm.css";
 
-function SearchForm({setPreloaderOpen}) {
+function SearchForm({handleSearch}) {
   const [newsInput, setNewsInput] = React.useState("");
 
   function handleNewsInput(evt) {
@@ -11,7 +11,7 @@ function SearchForm({setPreloaderOpen}) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    setPreloaderOpen();
+    handleSearch(newsInput);
     setNewsInput('');
   }
 

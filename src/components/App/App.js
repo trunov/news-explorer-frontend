@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, useLocation } from "react-router-dom";
+import { Route, Switch, useLocation, useHistory } from "react-router-dom";
 
 import "./App.css";
 
@@ -14,10 +14,19 @@ import RegistrationPopup from "../RegistrationPopup/RegistrationPopup";
 import LoginPopup from "../LoginPopup/LoginPopup";
 import SuccessPopup from "../SuccessPopup/SuccessPopup";
 
+import api from "../../utils/NewsApi";
+import * as auth from "../../utils/MainApi";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
+
 function App() {
+  const history = useHistory();
+
   const location = useLocation();
   const [isPreloaderOpen, setIsPreloaderOpen] = React.useState(false);
-  const [loggedIn, setLoggedIn] = React.useState(true);
+  const [loggedIn, setLoggedIn] = React.useState(false);
+
+  const [currentUser, setCurrentUser] = React.useState({});
+  const [cards, setCards] = React.useState([]);
 
   const [width, setWidth] = React.useState(window.innerWidth);
 
@@ -31,6 +40,12 @@ function App() {
     isButtonAuthrorizePressed,
     setIsButtonAuthrorizePressed,
   ] = React.useState(false);
+
+  function checkIfRedirectHappend() {
+    if (history.location.noAuthRedirect) {
+      setIsLoginPopupOpen(true);
+    }
+  }
 
   function checkWidthAndStateButtonAuthorized() {
     if (
@@ -54,7 +69,16 @@ function App() {
     };
   });
 
+  React.useEffect(() => {
+    const search = localStorage.getItem("Search");
+    if (search) {
+      setCards(JSON.parse(search));
+    }
+    checkIfRedirectHappend();
+  }, []);
+
   function handleLogOut() {
+    localStorage.clear();
     setLoggedIn(false);
   }
 
@@ -93,65 +117,103 @@ function App() {
   }
 
   function closeAllPopups() {
+    setIsSuccessPopupOpen(false);
     setIsRegistrationPopupOpen(false);
     setIsLoginPopupOpen(false);
     setIsButtonAuthrorizePressed(false);
   }
 
-  function setPreloaderOpen() {
+  function handleRegister(name, email, password, spanState) {
+    auth
+      .register(name, email, password)
+      .then(() => {
+        closeAllPopups();
+        setIsSuccessPopupOpen(true);
+      })
+      .catch((err) => {
+        if (err.includes("409")) {
+          spanState(true);
+        }
+      });
+  }
+
+  function handleSearch(searchText) {
     setIsPreloaderOpen(true);
-    setTimeout(function () {
-      setIsPreloaderOpen(false);
-    }, 1000);
+    api
+      .search(searchText)
+      .then((data) => {
+        const articles = data.articles.map((article) => ({
+          name: article.author,
+          urlToImage: article.urlToImage,
+          title: article.title,
+          description: article.description,
+          publishedAt: article.publishedAt,
+        }));
+        setIsPreloaderOpen(false);
+        setCards(articles);
+        localStorage.setItem("Search", JSON.stringify(articles));
+      })
+      .catch((err) => {
+        console.log("Wrong request");
+        setIsPreloaderOpen(false);
+      });
   }
 
   return (
-    <div className="App">
-      <Switch>
-        <Route exact path="/">
-          <div className="App_wrap">
-            <Header
-              loggedIn={loggedIn}
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="App">
+        <Switch>
+          <Route exact path="/">
+            <div className="App_wrap">
+              <Header
+                loggedIn={loggedIn}
+                location={location}
+                handleLogOut={handleLogOut}
+                handleAuthorizeClick={handleAuthorizeClick}
+                isButtonAuthrorizePressed={isButtonAuthrorizePressed}
+                handleStateAuthorizeClick={handleStateAuthorizeClick}
+                width={width}
+              />
+              <AfterHeader handleSearch={handleSearch} />
+            </div>
+            <Main
               location={location}
-              handleLogOut={handleLogOut}
-              handleAuthorizeClick={handleAuthorizeClick}
-              isButtonAuthrorizePressed={isButtonAuthrorizePressed}
-              handleStateAuthorizeClick={handleStateAuthorizeClick}
-              width={width}
+              isPreloaderOpen={isPreloaderOpen}
+              loggedIn={loggedIn}
+              cards={cards}
             />
-            <AfterHeader setPreloaderOpen={setPreloaderOpen} />
-          </div>
-          <Main
+          </Route>
+          <ProtectedRoute
+            path="/saved-news"
+            component={SavedNews}
             location={location}
-            isPreloaderOpen={isPreloaderOpen}
             loggedIn={loggedIn}
+            handleLogOut={handleLogOut}
+            width={width}
+            isButtonAuthrorizePressed={isButtonAuthrorizePressed}
+            handleStateAuthorizeClick={handleStateAuthorizeClick}
           />
-        </Route>
-        <ProtectedRoute
-          path="/saved-news"
-          component={SavedNews}
-          location={location}
-          loggedIn={loggedIn}
-          handleLogOut={handleLogOut}
-          width={width}
-          isButtonAuthrorizePressed={isButtonAuthrorizePressed}
-          handleStateAuthorizeClick={handleStateAuthorizeClick}
-        />
-      </Switch>
-      <Footer />
+        </Switch>
+        <Footer />
 
-      <RegistrationPopup
-        isOpen={isRegistrationPopupOpen}
-        onClose={closeAllPopups}
-        changePopup={changePopup}
-      />
-      <LoginPopup
-        isOpen={isLoginPopupOpen}
-        onClose={closeAllPopups}
-        changePopup={changePopup}
-      />
-      <SuccessPopup isOpen={isSuccessPopupOpen}/>
-    </div>
+        <RegistrationPopup
+          isOpen={isRegistrationPopupOpen}
+          onClose={closeAllPopups}
+          changePopup={changePopup}
+          handleRegister={handleRegister}
+        />
+        <LoginPopup
+          isOpen={isLoginPopupOpen}
+          onClose={closeAllPopups}
+          changePopup={changePopup}
+        />
+        <SuccessPopup
+          isOpen={isSuccessPopupOpen}
+          onClose={closeAllPopups}
+          changePopup={changePopup}
+        />
+      </div>
+    </CurrentUserContext.Provider>
   );
 }
 
