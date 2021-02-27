@@ -8,10 +8,12 @@ import "./SavedNews.css";
 function SavedNews({
   location,
   loggedIn,
-  handleLogInOut,
+  handleLogOut,
   width,
   isButtonAuthrorizePressed,
   handleStateAuthorizeClick,
+  savedCards,
+  removeArticle
 }) {
   return (
     <section className="savedNews">
@@ -19,12 +21,12 @@ function SavedNews({
         width={width}
         location={location}
         loggedIn={loggedIn}
-        handleLogInOut={handleLogInOut}
+        handleLogOut={handleLogOut}
         isButtonAuthrorizePressed={isButtonAuthrorizePressed}
         handleStateAuthorizeClick={handleStateAuthorizeClick}
       />
-      <SavedNewsHeader />
-      <NewsCardList location={location} />
+      <SavedNewsHeader savedCards={savedCards} />
+      <NewsCardList location={location} savedCards={savedCards} removeArticle={removeArticle} filledWithCards={savedCards.length}/>
     </section>
   );
 }

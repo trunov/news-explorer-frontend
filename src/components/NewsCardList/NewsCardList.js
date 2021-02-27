@@ -4,24 +4,32 @@ import News from "../../utils/News.json";
 
 import "./NewsCardList.css";
 
-function NewsCardList({ location, isPreloaderOpen, loggedIn, cards }) {
-
+function NewsCardList({
+  location,
+  loggedIn,
+  cards,
+  handleSaveArticle,
+  savedCards,
+  removeArticle,
+  notFound,
+  filledWithCards
+}) {
   let [count, setCount] = React.useState(3);
 
   let [removeButton, setIsRemoveButton] = React.useState(false);
 
-  const dataToRender = cards.slice(0, count)
+  const dataToRender = cards ? cards.slice(0, count) : null;
 
   function increaseCount() {
-    setCount(count += 3);
+    setCount((count += 3));
     checkShowButton();
   }
 
-  function checkCards() {
-    if (cards.length !== 0) {
-      return true
+  function checker() {
+    if (notFound || filledWithCards === 0) {
+      return false;
     } else {
-      return false
+      return true;
     }
   }
 
@@ -33,7 +41,7 @@ function NewsCardList({ location, isPreloaderOpen, loggedIn, cards }) {
 
   return (
     <>
-      {checkCards() && (
+      {checker() && (
         <section
           className={`news ${
             location.pathname === "/saved-news" && "news_saved"
@@ -52,18 +60,42 @@ function NewsCardList({ location, isPreloaderOpen, loggedIn, cards }) {
                 location.pathname === "/saved-news" && "news__list_saved"
               }`}
             >
-              {cards &&
+              {location.pathname === "/" &&
                 dataToRender.map((props) => (
                   <NewsCard
                     key={props.publishedAt}
                     {...props}
+                    id={props._id}
                     location={location}
                     loggedIn={loggedIn}
+                    handleSaveArticle={handleSaveArticle}
+                    isSaved={props._id ? true : false}
+                    removeArticle={removeArticle}
                   />
                 ))}
+              {location.pathname === "/saved-news" &&
+                savedCards
+                  .map((props) => (
+                    <NewsCard
+                      key={props._id}
+                      urlToImage={props.image}
+                      publishedAt={props.date}
+                      description={props.text}
+                      name={props.source}
+                      url={props.link}
+                      id={props._id}
+                      {...props}
+                      location={location}
+                      loggedIn={loggedIn}
+                      removeArticle={removeArticle}
+                    />
+                  ))
+                  .reverse()}
             </ul>
             {location.pathname === "/" && !removeButton && (
-              <button className="news__show-btn" onClick={increaseCount}>Показать еще</button>
+              <button className="news__show-btn" onClick={increaseCount}>
+                Показать еще
+              </button>
             )}
           </div>
         </section>

@@ -6,7 +6,7 @@ function RegistrationPopup({ isOpen, onClose, changePopup, handleRegister }) {
   const [password, setPassword] = React.useState("");
   const [name, setName] = React.useState("");
 
-  const [fillSpan, setFillSpan] = React.useState(false);
+  const [fillSpan, setFillSpan] = React.useState("");
   const [inputsFilled, setInputsFilled] = React.useState(false);
 
   function checkInputs() {
@@ -94,11 +94,10 @@ function RegistrationPopup({ isOpen, onClose, changePopup, handleRegister }) {
         name="name"
         className="popup__input"
       />
-      {fillSpan && (
-        <span id="password-error" className="popup__error popup__error_shown">
-          Такой пользователь уже есть
-        </span>
-      )}
+
+      <span id="password-error" className="popup__error popup__error_shown">
+        {fillSpan}
+      </span>
     </PopupWithForm>
   );
 }

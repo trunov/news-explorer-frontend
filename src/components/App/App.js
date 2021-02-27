@@ -23,10 +23,16 @@ function App() {
 
   const location = useLocation();
   const [isPreloaderOpen, setIsPreloaderOpen] = React.useState(false);
-  const [loggedIn, setLoggedIn] = React.useState(false);
+  const [loggedIn, setLoggedIn] = React.useState(null);
+
+  const [notFound, setNotFound] = React.useState(false);
 
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
+
+  const [savedCards, setSavedCards] = React.useState([]);
+
+  const [urlIdObj, setUrlIdObj] = React.useState({});
 
   const [width, setWidth] = React.useState(window.innerWidth);
 
@@ -40,6 +46,87 @@ function App() {
     isButtonAuthrorizePressed,
     setIsButtonAuthrorizePressed,
   ] = React.useState(false);
+
+  React.useEffect(() => {
+    tokenCheck();
+    if (loggedIn) {
+      getArticles();
+    }
+    const search = localStorage.getItem("Search");
+    if (search) {
+      setCards(JSON.parse(search));
+    }
+  }, []);
+
+  function tokenCheck() {
+    const token = localStorage.getItem("token");
+    if (token) {
+      auth
+        .getContent(token)
+        .then((data) => {
+          if (data) {
+            setLoggedIn(true);
+            setCurrentUser(data);
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      setLoggedIn(false);
+    }
+  }
+
+  function getArticles() {
+    const token = localStorage.getItem("token");
+    if (token) {
+      auth
+        .getArticles(token)
+        .then((data) => {
+          if (data) {
+            setSavedCards(data);
+            const total = data.reduce(
+              (map, item) => ({
+                ...map,
+                [item.link]: item._id,
+              }),
+              {}
+            );
+            setUrlIdObj(total);
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }
+
+  function getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+  }
+
+  function removeArticle(id) {
+    const token = localStorage.getItem("token");
+    if (token) {
+      auth
+        .deleteArticle(token, id)
+        .then(() => {
+          const newCards = savedCards.filter((c) => c._id !== id);
+          setSavedCards(newCards);
+          // убираю ключ значение из объекта
+          const newObj = urlIdObj
+          const value = getKeyByValue(newObj,id);
+          delete newObj[value]; 
+          setUrlIdObj(newObj);
+
+          const articles = cards.map((card) => {
+            if (card._id === id) {
+              card._id = undefined;
+            }
+            return card;
+          });
+          setCards(articles);
+          localStorage.setItem("Search", JSON.stringify(articles));
+        })
+        .catch((err) => console.log(err));
+    }
+  }
 
   function checkIfRedirectHappend() {
     if (history.location.noAuthRedirect) {
@@ -69,17 +156,12 @@ function App() {
     };
   });
 
-  React.useEffect(() => {
-    const search = localStorage.getItem("Search");
-    if (search) {
-      setCards(JSON.parse(search));
-    }
-    checkIfRedirectHappend();
-  }, []);
-
   function handleLogOut() {
     localStorage.clear();
+    setCards([]);
+    setNotFound(false);
     setLoggedIn(false);
+    history.push("/");
   }
 
   function escFunction(evt) {
@@ -96,6 +178,52 @@ function App() {
     }
   }
 
+  function handleSaveArticle(
+    keyword,
+    title,
+    description,
+    publishedAt,
+    name,
+    url,
+    urlToImage,
+    id
+  ) {
+    auth
+      .postArticle(
+        keyword,
+        title,
+        description,
+        publishedAt,
+        name,
+        url,
+        urlToImage,
+        localStorage.getItem("token")
+      )
+      .then((newCard) => {
+        if (newCard) {
+          setSavedCards([...savedCards, newCard]);
+
+          // добавляю ключ значение к объекту из урлов и айди
+          const newObj = urlIdObj;
+          newObj[newCard.link] = newCard._id;
+          setUrlIdObj(newObj);
+
+          const newCards = cards.map((card) => {
+            if (card.urlToImage === newCard.image) {
+              card._id = newCard._id;
+            }
+            return card;
+          });
+
+          setCards(newCards);
+          localStorage.setItem("Search", JSON.stringify(newCards));
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   React.useEffect(() => {
     if (isRegistrationPopupOpen === true || isLoginPopupOpen === true) {
       document.addEventListener("keydown", escFunction);
@@ -103,6 +231,23 @@ function App() {
       document.removeEventListener("keydown", escFunction);
     }
   }, [isRegistrationPopupOpen, isLoginPopupOpen]);
+
+  React.useEffect(() => {
+    if (loggedIn) {
+      const token = localStorage.getItem("token");
+      auth
+        .getContent(token)
+        .then((data) => {
+          if (data) {
+            setCurrentUser(data);
+          }
+        })
+        .catch((err) => console.log(err));
+      getArticles();
+    } else {
+      checkIfRedirectHappend();
+    }
+  }, [loggedIn]);
 
   function changePopup(event) {
     closeAllPopups();
@@ -132,29 +277,67 @@ function App() {
       })
       .catch((err) => {
         if (err.includes("409")) {
-          spanState(true);
+          spanState("Такой пользователь уже есть");
+        } else if (err.includes("400")) {
+          spanState("Запрос сформирован неверно");
+        }
+      });
+  }
+
+  function handleLogin(email, password, spanState) {
+    auth
+      .authorize(email, password)
+      .then((data) => {
+        closeAllPopups();
+        setCards([]);
+        setLoggedIn(true);
+        localStorage.removeItem("Search");
+        localStorage.setItem("token", data.token);
+      })
+      .catch((err) => {
+        if (err.includes("401")) {
+          spanState("Неправильные почта или пароль");
+        } else {
+          spanState(err.message);
         }
       });
   }
 
   function handleSearch(searchText) {
+    setNotFound(false);
     setIsPreloaderOpen(true);
     api
       .search(searchText)
       .then((data) => {
-        const articles = data.articles.map((article) => ({
-          name: article.author,
-          urlToImage: article.urlToImage,
-          title: article.title,
-          description: article.description,
-          publishedAt: article.publishedAt,
-        }));
-        setIsPreloaderOpen(false);
-        setCards(articles);
-        localStorage.setItem("Search", JSON.stringify(articles));
+        if (data.totalResults > 0) {
+          const articles = data.articles.map((article) => ({
+            name: article.source.name,
+            url: article.url,
+            urlToImage: article.urlToImage,
+            title: article.title,
+            description: article.description,
+            publishedAt: article.publishedAt,
+            keyword: searchText,
+          }));
+  
+          const articlesUpdated = articles.map((item) => {
+            if (urlIdObj[item.url]) {
+              item._id = urlIdObj[item.url];
+            }
+            return item;
+          });
+          setCards(articlesUpdated);
+          
+          localStorage.setItem("Search", JSON.stringify(articlesUpdated));
+          setIsPreloaderOpen(false);
+        } else {
+          setNotFound(true);
+          setIsPreloaderOpen(false);
+        }
+        
       })
       .catch((err) => {
-        console.log("Wrong request");
+        console.log(`message: ${err.message}`);
         setIsPreloaderOpen(false);
       });
   }
@@ -181,18 +364,25 @@ function App() {
               isPreloaderOpen={isPreloaderOpen}
               loggedIn={loggedIn}
               cards={cards}
+              handleSaveArticle={handleSaveArticle}
+              removeArticle={removeArticle}
+              notFound={notFound}
             />
           </Route>
-          <ProtectedRoute
-            path="/saved-news"
-            component={SavedNews}
-            location={location}
-            loggedIn={loggedIn}
-            handleLogOut={handleLogOut}
-            width={width}
-            isButtonAuthrorizePressed={isButtonAuthrorizePressed}
-            handleStateAuthorizeClick={handleStateAuthorizeClick}
-          />
+          {loggedIn === null ? null : (
+            <ProtectedRoute
+              path="/saved-news"
+              component={SavedNews}
+              location={location}
+              loggedIn={loggedIn}
+              handleLogOut={handleLogOut}
+              width={width}
+              isButtonAuthrorizePressed={isButtonAuthrorizePressed}
+              handleStateAuthorizeClick={handleStateAuthorizeClick}
+              savedCards={savedCards}
+              removeArticle={removeArticle}
+            />
+          )}
         </Switch>
         <Footer />
 
@@ -206,6 +396,7 @@ function App() {
           isOpen={isLoginPopupOpen}
           onClose={closeAllPopups}
           changePopup={changePopup}
+          handleLogin={handleLogin}
         />
         <SuccessPopup
           isOpen={isSuccessPopupOpen}
