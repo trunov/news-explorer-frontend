@@ -17,11 +17,11 @@ class Api {
 
   search(query) {
     return fetch(
-      `${this._url}/v2/everything?q=${query}&from=${calculateDate()}&apiKey=${this._apiKey}`
+      `${this._url}/news/v2/everything?q=${query}&from=${calculateDate()}&apiKey=${this._apiKey}`
     ).then((res) => checkResponse(res));
   }
 }
 
-const api = new Api("https://newsapi.org", "a95d7c65d6d74245ab2379165bc67213");
+const api = new Api("https://nomoreparties.co", "a95d7c65d6d74245ab2379165bc67213");
 
 export default api;
