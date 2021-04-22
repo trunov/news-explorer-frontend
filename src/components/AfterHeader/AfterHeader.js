@@ -1,7 +1,7 @@
 import SearchForm from '../SearchForm/SearchForm';
 import "./afterHeader.css";
 
-function afterHeader({setPreloaderOpen}) {
+function afterHeader({handleSearch}) {
   return (
     <section className="afterHeader">
       <h2 className="afterHeader__header">
@@ -11,7 +11,7 @@ function afterHeader({setPreloaderOpen}) {
         Находите самые свежие статьи на любую тему и сохраняйте в <br></br> своём личном
         кабинете.
       </p>
-      <SearchForm setPreloaderOpen={setPreloaderOpen} />
+      <SearchForm handleSearch={handleSearch} />
       
     </section>
   );

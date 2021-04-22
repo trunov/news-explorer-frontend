@@ -7,6 +7,8 @@ import close from "../../images/close.svg";
 import logoutSavedNews from "../../images/logout.svg";
 import logoutMain from "../../images/logout_main.svg";
 
+import { CurrentUserContext } from '../../contexts/CurrentUserContext';
+
 function Navigation({
   handleBurgerButtonClick,
   handleLogOut,
@@ -16,6 +18,9 @@ function Navigation({
   location,
   isButtonAuthrorizePressed,
 }) {
+
+  const currentUser = React.useContext(CurrentUserContext);
+
   return (
     <nav className="navigation">
       <div
@@ -66,7 +71,7 @@ function Navigation({
             "navigation__wrap__button__main-saved"
           }`}
         >
-          {loggedIn ? "Кирилл" : "Авторизоваться"}
+          {loggedIn ? currentUser.name : "Авторизоваться"}
 
           {loggedIn &&
             (location.pathname === "/saved-news" ? (

@@ -11,25 +11,50 @@ function NewsCard({
   urlToImage,
   publishedAt,
   location,
-  loggedIn
+  loggedIn,
+  keyword,
+  handleSaveArticle,
+  removeArticle,
+  isSaved
 }) {
-  const [isSaved, setIsSaved] = React.useState(false);
-  //   const [isAuth, setIsAuth] = React.useState(true);
 
   function handleSaved() {
-    setIsSaved(!isSaved);
+    handleSaveArticle(
+      keyword,
+      title,
+      description,
+      publishedAt,
+      name,
+      url,
+      urlToImage
+    );
+  }
+
+  function handleRemove() {
+    removeArticle(id);
+  }
+
+  function markerClick() {
+    if (loggedIn) {
+      if (isSaved) {
+        handleRemove();
+        isSaved=false;
+      } else {
+        handleSaved();
+      }
+    }
   }
 
   return (
     <li className="news-card">
       <button
         className={`news-card__marker ${
-          isSaved && location.pathname === "/"
+          isSaved && location.pathname === "/" && loggedIn
             ? "news-card__marker_saved"
             : "news-card__marker_unsaved"
         }`}
         type="button"
-        onClick={handleSaved}
+        onClick={markerClick}
       >
         {location.pathname === "/" ? (
           <svg
@@ -49,6 +74,7 @@ function NewsCard({
           </svg>
         ) : (
           <svg
+            onClick={handleRemove}
             width="18"
             height="19"
             viewBox="0 0 18 19"
@@ -76,9 +102,7 @@ function NewsCard({
           : "Убрать из сохранённых"}
       </span>
 
-      {location.pathname === "/saved-news" && (
-        <div className={`news-card__tag`}>Новость</div>
-      )}
+      <div className={`news-card__tag`}>{keyword}</div>
 
       <img className="news-card__img" src={urlToImage} alt="News" />
       <div className="news-card__info">

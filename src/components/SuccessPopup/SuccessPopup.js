@@ -11,6 +11,7 @@ function SuccessPopup({ isOpen, onClose, changePopup }) {
       isSuccess={isSuccess}
       isOpen={isOpen}
       onClose={onClose}
+      changePopup={changePopup}
       textLink={"Войти"}
     >
     </PopupWithForm>

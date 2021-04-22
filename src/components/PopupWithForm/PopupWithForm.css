@@ -204,6 +204,8 @@
 .popup__link {
   color: #2f71e5;
   cursor: pointer;
+  font-family: "Inter", sans-serif;;
+  font-weight: 500;
 }
 
 @media screen and (max-width: 767px) {

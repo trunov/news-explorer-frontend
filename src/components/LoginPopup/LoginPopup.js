@@ -1,9 +1,10 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import PopupWithForm from "../PopupWithForm/PopupWithForm";
 
-function LoginPopup({ isOpen, onClose, changePopup }) {
+function LoginPopup({ isOpen, onClose, changePopup, handleLogin }) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [fillSpan, setFillSpan] = React.useState("");
 
   const [inputsFilled, setInputsFilled] = React.useState(false);
 
@@ -19,6 +20,7 @@ function LoginPopup({ isOpen, onClose, changePopup }) {
 
   useEffect(() => {
     checkInputs();
+    setFillSpan("");
   }, arr);
 
   function handleChange(evt) {
@@ -36,14 +38,7 @@ function LoginPopup({ isOpen, onClose, changePopup }) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    if (!email) {
-      console.log("Не введен email");
-      return;
-    }
-    if (!password) {
-      console.log("Не введен пароль");
-      return;
-    }
+    handleLogin(email, password, setFillSpan);
     resetForm();
     setInputsFilled(false);
   }
@@ -73,7 +68,7 @@ function LoginPopup({ isOpen, onClose, changePopup }) {
         id="login-email-input"
       />
       <span
-        className="popup__email-error popup__error_shown"
+        className="popup__email-error "  //popup__error_shown
         id="login-email-error"
       >
         Неправильный формат email
@@ -89,6 +84,10 @@ function LoginPopup({ isOpen, onClose, changePopup }) {
         className="popup__input popup__input_password"
         id="login-password-input"
       />
+
+      <span id="password-error" className="popup__error popup__error_shown">
+        {fillSpan}
+      </span>
     </PopupWithForm>
   );
 }
